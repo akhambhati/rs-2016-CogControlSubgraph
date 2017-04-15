@@ -11,6 +11,9 @@
 *.mat
 *.zip
 
+*.e*
+*.o*
+
 # Python notebook code
 .ipynb_checkpoints/
 
