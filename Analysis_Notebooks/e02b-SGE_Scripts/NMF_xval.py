@@ -1,5 +1,16 @@
 #!/bin/zsh
 
+#
+# Make sure that output files arrive in the working directory
+#$ -cwd
+#
+# Reserve 10 GB of memory
+#$ -l h_vmem=10.5G,s_vmem=10.0G
+#
+#Specify which nodes to use
+#$ -q all.q,basic.q
+#
+
 source activate echobase
 ipython -c "
 
@@ -27,6 +38,7 @@ cfg_matr = cfg_data['cfg_matr']
 param_list = np.load('{}/NMF_CrossValidation.Param_List.npz'.format(path_ExpData))['param_list']
 
 # Grab the task ID of the current job (and the associated parameter dictionary)
+print('Task ID is: {}'.format(os.environ['SGE_TASK_ID']))
 sge_task_id = int(os.environ['SGE_TASK_ID'])-1
 param_dict = param_list[sge_task_id]
 param_dict['train_ix'] = map(int, param_dict['train_ix'])
