@@ -75,7 +75,7 @@ fac_cons_subnet, fac_cons_seeds, err = Subgraph.nmf.snmf_bcd(
 
 # Consensus Coefficients
 sys.stdout.write('\nCalculating subgraph expression coefficients...')
-cfg_matr_path = glob.glob("{}/NMF_Optimization.CfgMatr.npz".format(path_ExpData))[0]
+cfg_matr_path = glob.glob('{}/NMF_Optimization.CfgMatr.npz'.format(path_ExpData))[0]
 data_cfg = np.load(cfg_matr_path, mmap_mode='r')
 n_win = data_cfg['cfg_matr'].shape[0]
 fac_cons_subnet_2, fac_cons_coef_2, err = Subgraph.nmf.snmf_bcd(
