@@ -75,3 +75,5 @@ coverage.xml
 *.pdf
 *.eps
 *.ai
+
+core.*
