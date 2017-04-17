@@ -36,25 +36,39 @@ import Echobase
 Subgraph = Echobase.Network.Partitioning.Subgraph
 
 path_ExpData = '$2'
-path_Output = '{}/NMF_CrossValidation.Param.{}.npz'.format(path_ExpData, sge_task_id)
+path_Output = '{}/NMF_Consensus.Param.{}.npz'.format(path_ExpData, sge_task_id)
 
 # Check if the output already exists (can be commented if overwrite is needed)
 if os.path.exists(path_Output):
     raise Exception('Output {} already exists'.format(path_Output))
 
-# Load the configuration matrix and parameter list
+# Load the configuration matrix and optimal parameter set
 cfg_data = np.load('{}/NMF_Optimization.CfgMatr.npz'.format(path_ExpData))
 cfg_matr = cfg_data['cfg_matr']
-param_list = np.load('{}/NMF_CrossValidation.Param_List.npz'.format(path_ExpData))['param_list']
+proc_item = np.load('{}/NMF_CrossValidation.Optimal_Param.npz'.format(path_ExpData))['opt_param'][()]
 
 # Grab the task ID of the current job (and the associated parameter dictionary)
-param_dict = param_list[sge_task_id]
-param_dict['train_ix'] = map(int, param_dict['train_ix'])
-param_dict['test_ix'] = map(int, param_dict['test_ix'])
+fac_subnet = np.random.uniform(low=0, high=1.0,
+                               size=(proc_item['rank'],
+                                     cfg_matr.shape[1]))
+fac_coef = np.random.uniform(low=0, high=1.0,
+                             size=(proc_item['rank'],
+                                   cfg_matr.shape[0]))
 
-qmeas_dict = Subgraph.optimize_nmf.run_xval_paramset(cfg_matr, param_dict)
+# Run NMF Algorithm
+fac_subnet, fac_coef, err = Subgraph.nmf.snmf_bcd(
+    cfg_matr,
+    alpha=proc_item['alpha'],
+    beta=proc_item['beta'],
+    fac_subnet_init=fac_subnet,
+    fac_coef_init=fac_coef,
+    max_iter=100, verbose=False)
 
-np.savez(path_Output, qmeas_dict=qmeas_dict)
+# Cache the NMF result
+np.savez(path_Output,
+         fac_subnet=fac_subnet,
+         fac_coef=fac_coef,
+         err=err)
 ######
 
 "
