@@ -35,7 +35,8 @@ sys.path.append('$1')
 import Echobase
 Subgraph = Echobase.Network.Partitioning.Subgraph
 
-path_ExpData = '$2'
+path_InpData = '$2'
+path_ExpData = '$3'
 path_Output = '{}/NMF_Consensus.Param.{}.npz'.format(path_ExpData, sge_task_id)
 
 # Check if the output already exists (can be commented if overwrite is needed)
@@ -43,7 +44,7 @@ if os.path.exists(path_Output):
     raise Exception('Output {} already exists'.format(path_Output))
 
 # Load the configuration matrix and optimal parameter set
-cfg_data = np.load('{}/NMF_Optimization.CfgMatr.npz'.format(path_ExpData))
+cfg_data = np.load('{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData))
 cfg_matr = cfg_data['cfg_matr']
 proc_item = np.load('{}/NMF_CrossValidation.Optimal_Param.npz'.format(path_ExpData))['opt_param'][()]
 

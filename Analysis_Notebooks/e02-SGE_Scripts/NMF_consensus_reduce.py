@@ -33,7 +33,8 @@ sys.path.append('$1')
 import Echobase
 Subgraph = Echobase.Network.Partitioning.Subgraph
 
-path_ExpData = '$2'
+path_InpData = '$2'
+path_ExpData = '$3'
 path_Output = '{}/NMF_Consensus.Param.All.npz'.format(path_ExpData)
 
 # Check if the output already exists (can be commented if overwrite is needed)
@@ -75,8 +76,8 @@ fac_cons_subnet, fac_cons_seeds, err = Subgraph.nmf.snmf_bcd(
 
 # Consensus Coefficients
 sys.stdout.write('\nCalculating subgraph expression coefficients...')
-cfg_matr_path = glob.glob('{}/NMF_Optimization.CfgMatr.npz'.format(path_ExpData))[0]
-data_cfg = np.load(cfg_matr_path, mmap_mode='r')
+cfg_data_path = '{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData)
+data_cfg = np.load(cfg_data_path, mmap_mode='r')
 n_win = data_cfg['cfg_matr'].shape[0]
 fac_cons_subnet_2, fac_cons_coef_2, err = Subgraph.nmf.snmf_bcd(
     data_cfg['cfg_matr'],
