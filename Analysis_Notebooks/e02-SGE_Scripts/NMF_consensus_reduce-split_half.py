@@ -36,7 +36,16 @@ Subgraph = Echobase.Network.Partitioning.Subgraph
 path_InpData = '$2'
 path_ExpData = '$3'
 
-for grp_id in ['A', 'B']:
+# Load the configuration matrix and optimal parameter set
+cfg_data = np.load('{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData))
+cfg_matr_full = cfg_data['cfg_matr']
+cfg_obs_lut = cfg_data['cfg_obs_lut']
+
+# Divide the blocks in half
+split_grp = {'A': np.array(cfg_obs_lut[..., :3].reshape(-1), dtype=int),
+             'B': np.array(cfg_obs_lut[..., 3:].reshape(-1), dtype=int)}
+
+for grp_id in split_grp.keys():
     path_Output = '{}/NMF_Consensus.Param.{}.All.npz'.format(path_ExpData, grp_id)
 
     # Check if the output already exists (can be commented if overwrite is needed)
@@ -78,15 +87,13 @@ for grp_id in ['A', 'B']:
 
     # Consensus Coefficients
     sys.stdout.write('\nCalculating subgraph expression coefficients...')
-    cfg_data_path = '{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData)
-    data_cfg = np.load(cfg_data_path, mmap_mode='r')
-    n_win = data_cfg['cfg_matr'].shape[0]
+    cfg_matr = cfg_matr_full[split_grp[grp_id], :]
     fac_cons_subnet_2, fac_cons_coef_2, err = Subgraph.nmf.snmf_bcd(
-        data_cfg['cfg_matr'],
+        cfg_matr,
         alpha=0.0,
         beta=0.0,
         fac_subnet_init=fac_cons_subnet,
-        fac_coef_init=np.random.uniform(low=0.0, high=1.0, size=(n_fac, n_win)),
+        fac_coef_init=np.random.uniform(low=0.0, high=1.0, size=(n_fac, cfg_matr.shape[0])),
         max_iter=100, verbose=False)
 
     # Cache the Consensus NMF result
