@@ -50,7 +50,7 @@ cfg_matr = cfg_data['cfg_matr']
 # Load the NMF Consensus subgraphs
 df_cons = np.load('{}/NMF_Consensus.Param.All.npz'.format(path_ExpData))
 fac_subnet_true = df_cons['fac_subnet'].copy()
-rank = fac_subnet.shape[0]
+rank = fac_subnet_true.shape[0]
 
 # Generate a surrogate subgraph set
 fac_subnet_surr = np.dot(np.linalg.qr(np.random.rand(rank, rank))[0], fac_subnet_true)
