@@ -53,7 +53,7 @@ fac_subnet_true = df_cons['fac_subnet'].copy()
 rank = fac_subnet_true.shape[0]
 
 # Generate a surrogate subgraph set
-fac_subnet_surr = np.dot(np.linalg.qr(np.random.rand(rank, rank))[0], fac_subnet_true)
+fac_subnet_surr = np.dot(np.random.rand(rank, rank), fac_subnet_true)
 fac_subnet_surr = (fac_subnet_surr.T / np.linalg.norm(fac_subnet_surr, axis=1)).T
 
 # Randomly initialize the coefficients before NNLS
