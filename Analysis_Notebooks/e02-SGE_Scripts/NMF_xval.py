@@ -44,7 +44,7 @@ if os.path.exists(path_Output):
     raise Exception('Output {} already exists'.format(path_Output))
 
 # Load the configuration matrix and parameter list
-cfg_data = np.load('{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData))
+cfg_data = np.load('{}/Population.Configuration_Matrix.npz'.format(path_InpData))
 cfg_matr = cfg_data['cfg_matr']
 param_list = np.load('{}/NMF_CrossValidation.Param_List.npz'.format(path_ExpData))['param_list']
 

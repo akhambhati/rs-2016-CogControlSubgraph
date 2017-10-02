@@ -44,7 +44,7 @@ if os.path.exists(path_Output):
     raise Exception('Output {} already exists'.format(path_Output))
 
 # Load the configuration matrix and optimal parameter set
-cfg_data = np.load('{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData))
+cfg_data = np.load('{}/Population.Configuration_Matrix.npz'.format(path_InpData))
 cfg_matr = cfg_data['cfg_matr']
 proc_item = np.load('{}/NMF_CrossValidation.Optimal_Param.npz'.format(path_ExpData))['opt_param'][()]
 

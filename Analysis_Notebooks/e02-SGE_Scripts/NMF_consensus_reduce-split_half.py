@@ -37,7 +37,7 @@ path_InpData = '$2'
 path_ExpData = '$3'
 
 # Load the configuration matrix and optimal parameter set
-cfg_data = np.load('{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData))
+cfg_data = np.load('{}/Population.Configuration_Matrix.npz'.format(path_InpData))
 cfg_matr_full = cfg_data['cfg_matr']
 cfg_obs_lut = cfg_data['cfg_obs_lut']
 
