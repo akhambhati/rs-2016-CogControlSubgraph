@@ -42,7 +42,9 @@ if os.path.exists(path_Output):
     raise Exception('Output {} already exists'.format(path_Output))
 
 # Gather all NMF_consensus seeds
-seed_paths = glob.glob('{}/NMF_Consensus.Param.*.npz'.format(path_ExpData))
+seed_paths = [pth
+              for pth in glob.glob('{}/NMF_Consensus.Param.*.npz'.format(path_ExpData))
+              if len(pth.split('/')[-1].split('.')) == 4]
 
 # Aggregate the estimated subgraphs of each seed
 fac_subnet_seeds = []
@@ -76,7 +78,7 @@ fac_cons_subnet, fac_cons_seeds, err = Subgraph.nmf.snmf_bcd(
 
 # Consensus Coefficients
 sys.stdout.write('\nCalculating subgraph expression coefficients...')
-cfg_data_path = '{}/Population.Configuration_Matrix.Norm.npz'.format(path_InpData)
+cfg_data_path = '{}/Population.Configuration_Matrix.npz'.format(path_InpData)
 data_cfg = np.load(cfg_data_path, mmap_mode='r')
 n_win = data_cfg['cfg_matr'].shape[0]
 fac_cons_subnet_2, fac_cons_coef_2, err = Subgraph.nmf.snmf_bcd(

@@ -39,10 +39,6 @@ path_InpData = '$2'
 path_ExpData = '$3'
 path_Output = '{}/NMF_Surrogate.Param.{}.npz'.format(path_ExpData, sge_task_id)
 
-# Check if the output already exists (can be commented if overwrite is needed)
-if os.path.exists(path_Output):
-    raise Exception('Output {} already exists'.format(path_Output))
-
 # Load the configuration matrix
 cfg_data = np.load('{}/Population.Configuration_Matrix.npz'.format(path_InpData))
 cfg_matr = cfg_data['cfg_matr']
@@ -54,7 +50,8 @@ rank = fac_subnet_true.shape[0]
 
 # Generate a surrogate subgraph set
 fac_subnet_surr = np.dot(np.random.rand(rank, rank), fac_subnet_true)
-fac_subnet_surr = (fac_subnet_surr.T / np.linalg.norm(fac_subnet_surr, axis=1)).T
+fac_subnet_surr = (fac_subnet_surr.T / np.linalg.norm(fac_subnet_surr, axis=1, ord=2)).T
+
 
 # Randomly initialize the coefficients before NNLS
 fac_coef = np.random.uniform(low=0, high=1.0,
